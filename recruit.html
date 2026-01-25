@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAR Sanctuary | Join the Collective</title>
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Manrope:wght@200;300;400;500&family=Playfair+Display:ital@0;1&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+
+<body>
+    <!-- Background Texture -->
+    <div class="bg-texture"></div>
+
+    <div class="container-fluid">
+        <header class="glass-header">
+            <h1 class="site-title" title="...">BAR Sanctuary</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="access.html">Access</a></li>
+                    <li><a href="recruit.html" class="active">Recruit</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="recruit-main fade-in-section" style="padding-top: 120px; padding-bottom: 100px;">
+            <div class="content-wrapper" style="max-width: 1000px; margin: 0 auto; padding: 0 20px;">
+                <h2 class="section-heading" style="text-align: center; margin-bottom: 60px;">STAFF / RECRUIT</h2>
+
+                <p class="section-text" style="text-align: center; margin-bottom: 80px;">
+                    BAR Sanctuaryでは、来訪者の状態を安定化できるスタッフを募集しています。<br>
+                    感情の揺らぎに耐性のある方を歓迎します。
+                </p>
+
+                <!-- Job Cards -->
+                <div class="recruit-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 80px;">
+                    <!-- Bartender -->
+                    <div class="news-card-glass">
+                        <h3 style="color: var(--color-accent);">BARTENDER</h3>
+                        <p><strong>業務内容:</strong> ドリンク作成、接客、記憶の管理</p>
+                        <p><strong>給与:</strong> 時給1,500円〜</p>
+                        <p><strong>勤務時間:</strong> 18:00 - 26:00</p>
+                        <p style="margin-top: 15px; font-size: 0.8rem; color: #666;">※経験者優遇。静かな所作が求められます。</p>
+                    </div>
+
+                    <!-- Floor Staff -->
+                    <div class="news-card-glass">
+                        <h3 style="color: var(--color-accent);">FLOOR STAFF</h3>
+                        <p><strong>業務内容:</strong> エスコート、環境維持、清掃</p>
+                        <p><strong>給与:</strong> 時給1,300円〜</p>
+                        <p><strong>勤務時間:</strong> 17:00 - 24:00</p>
+                        <p style="margin-top: 15px; font-size: 0.8rem; color: #666;">※音楽と空間への適応能力が必須です。</p>
+                    </div>
+                </div>
+
+                <!-- Application Form -->
+                <div class="form-container news-card-glass" style="max-width: 600px; margin: 0 auto;">
+                    <h3 style="text-align: center; margin-bottom: 30px;">APPLICATION FORM</h3>
+                    <form id="recruit-form">
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label
+                                style="display: block; font-family: var(--font-mono); margin-bottom: 8px; color: var(--color-accent);">Name</label>
+                            <input type="text"
+                                style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--color-border); color: #fff; font-family: var(--font-main);"
+                                placeholder="お名前">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label
+                                style="display: block; font-family: var(--font-mono); margin-bottom: 8px; color: var(--color-accent);">Email</label>
+                            <input type="email"
+                                style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--color-border); color: #fff; font-family: var(--font-main);"
+                                placeholder="example@email.com">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label
+                                style="display: block; font-family: var(--font-mono); margin-bottom: 8px; color: var(--color-accent);">Position</label>
+                            <select id="job-type"
+                                style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--color-border); color: #fff; font-family: var(--font-main);">
+                                <option value="bartender">Bartender</option>
+                                <option value="floor">Floor Staff</option>
+                                <option value="engineer">Engineer (System Maintenance)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 30px;">
+                            <label
+                                style="display: block; font-family: var(--font-mono); margin-bottom: 8px; color: var(--color-accent);">Message</label>
+                            <textarea rows="4"
+                                style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--color-border); color: #fff; font-family: var(--font-main);"></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn"
+                            style="width: 100%; padding: 15px; background: var(--color-accent-dim); border: none; color: #fff; font-family: var(--font-display); letter-spacing: 0.2em; cursor: pointer; transition: 0.3s;">SEND
+                            DATA</button>
+                    </form>
+                </div>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2024 BAR Sanctuary.</p>
+                <p class="footer-links"><a href="about.html">About & Privacy</a></p>
+            </div>
+        </footer>
+    </div>
+    <script src="assets/app.js"></script>
+    <style>
+        .submit-btn:hover {
+            background: var(--color-accent);
+            color: #000;
+        }
+    </style>
+</body>
+
+</html>
