@@ -456,6 +456,151 @@ footer {
   /* Basic glitch styling for text */
 }
 
+/* --- Access Map Glitch --- */
+.access-map {
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.map-glitch {
+  position: relative;
+  background: rgba(0, 0, 0, 1);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.map-glitch__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0.7;
+  mix-blend-mode: luminosity;
+  filter: contrast(1.2) grayscale(0.2);
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.map-glitch::before,
+.map-glitch::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--map-image);
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.map-glitch:hover .map-glitch__image {
+  filter: contrast(1.6) saturate(1.5) hue-rotate(-10deg);
+  animation: map-glitch-jitter 0.2s infinite steps(2, end);
+}
+
+.map-glitch:hover::before {
+  opacity: 0.85;
+  filter: contrast(2) saturate(2) hue-rotate(20deg);
+  animation: map-glitch-scan 0.25s infinite steps(2, end),
+    map-glitch-shift 0.18s infinite steps(2, end);
+}
+
+.map-glitch:hover::after {
+  opacity: 0.7;
+  filter: contrast(1.8) saturate(1.6) hue-rotate(-30deg);
+  animation: map-glitch-scan 0.2s infinite steps(3, end) reverse,
+    map-glitch-shear 0.14s infinite linear;
+}
+
+.access-map__alert {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  text-align: right;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  border: 1px solid var(--color-error);
+}
+
+@keyframes map-glitch-jitter {
+  0% {
+    transform: translate(0);
+  }
+
+  25% {
+    transform: translate(-2px, 2px) skewX(1deg);
+  }
+
+  50% {
+    transform: translate(3px, -1px) skewY(-1deg);
+  }
+
+  75% {
+    transform: translate(-3px, 1px) skewX(-1deg);
+  }
+
+  100% {
+    transform: translate(1px, -2px);
+  }
+}
+
+@keyframes map-glitch-scan {
+  0% {
+    clip-path: inset(0 0 85% 0);
+  }
+
+  20% {
+    clip-path: inset(10% 0 55% 0);
+  }
+
+  40% {
+    clip-path: inset(50% 0 30% 0);
+  }
+
+  60% {
+    clip-path: inset(65% 0 15% 0);
+  }
+
+  80% {
+    clip-path: inset(5% 0 70% 0);
+  }
+
+  100% {
+    clip-path: inset(30% 0 40% 0);
+  }
+}
+
+@keyframes map-glitch-shift {
+  0% {
+    transform: translate(0);
+  }
+
+  33% {
+    transform: translate(-6px, -3px);
+  }
+
+  66% {
+    transform: translate(8px, 4px);
+  }
+
+  100% {
+    transform: translate(-4px, 2px);
+  }
+}
+
+@keyframes map-glitch-shear {
+  0% {
+    transform: translate(0) skewX(0deg);
+  }
+
+  50% {
+    transform: translate(6px, -4px) skewX(3deg);
+  }
+
+  100% {
+    transform: translate(-5px, 3px) skewX(-3deg);
+  }
+}
+
 /* Utilities */
 .hidden {
   display: none !important;
