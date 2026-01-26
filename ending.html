@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>REBOOTED</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: "Courier New", monospace;
+            position: relative;
+            color: #fff;
+        }
+
+        /* Noise background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 0, 0, 0.03) 2px,
+                    rgba(255, 0, 0, 0.03) 4px),
+                repeating-linear-gradient(90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 255, 0.03) 2px,
+                    rgba(0, 255, 255, 0.03) 4px);
+            opacity: 0.25;
+            z-index: 1;
+            pointer-events: none;
+            animation: noise 0.22s infinite;
+        }
+
+        /* Scanlines */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg,
+                    rgba(0, 0, 0, 0.16),
+                    rgba(0, 0, 0, 0.16) 1px,
+                    transparent 1px,
+                    transparent 2px);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        @keyframes noise {
+
+            0%,
+            100% {
+                opacity: 0.25;
+                transform: translate(0, 0);
+            }
+
+            10% {
+                opacity: 0.35;
+                transform: translate(-1px, 1px);
+            }
+
+            20% {
+                opacity: 0.2;
+                transform: translate(1px, -1px);
+            }
+
+            30% {
+                opacity: 0.3;
+                transform: translate(0, 0);
+            }
+
+            40% {
+                opacity: 0.25;
+                transform: translate(1px, 0);
+            }
+
+            50% {
+                opacity: 0.35;
+                transform: translate(-1px, 1px);
+            }
+
+            60% {
+                opacity: 0.2;
+                transform: translate(0, -1px);
+            }
+
+            70% {
+                opacity: 0.3;
+                transform: translate(0, 0);
+            }
+
+            80% {
+                opacity: 0.25;
+                transform: translate(1px, 1px);
+            }
+
+            90% {
+                opacity: 0.35;
+                transform: translate(-1px, 0);
+            }
+        }
+
+        .wrap {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            background: rgba(0, 0, 0, 0.78);
+        }
+
+        .terminal {
+            width: min(920px, 92vw);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.08);
+            padding: 22px;
+        }
+
+        .title {
+            font-size: 1rem;
+            letter-spacing: 0.12em;
+            color: rgba(255, 255, 255, 0.75);
+            margin-bottom: 12px;
+        }
+
+        .text {
+            white-space: pre-wrap;
+            line-height: 1.75;
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.92);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.12);
+            min-height: 9em;
+        }
+
+        .btn {
+            margin-top: 18px;
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.92);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.12s ease, background 0.12s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        @media (max-width: 768px) {
+            .text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="terminal">
+            <div class="title">REBOOT SEQUENCE COMPLETE</div>
+            <div class="text" id="terminal-text"></div>
+            <button class="btn" id="go-btn" style="display:none;">今日もあのBARに飲みに行く</button>
+        </div>
+    </div>
+
+    <script>
+        const finalMsg =
+            "あなたは夢から覚めました。\n" +
+            "もう遊びに行く時間です。\n\n" +
+            "現実は、ここにあります\n" +
+            "あなたの目の前に広がっています。\n\n" +
+            "...それとも、まだ思い出せませんか？";
+
+        function typeWriter(el, text, cb) {
+            let i = 0;
+            el.textContent = "";
+            const speed = 40;
+
+            (function step() {
+                if (i < text.length) {
+                    el.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(step, speed);
+                } else if (cb) {
+                    cb();
+                }
+            })();
+        }
+
+        const textEl = document.getElementById("terminal-text");
+        const btn = document.getElementById("go-btn");
+
+        typeWriter(textEl, finalMsg, () => {
+            btn.style.display = "inline-block";
+        });
+
+        btn.addEventListener("click", () => {
+            window.location.href = "https://cluster.mu/w/1c331560-bc78-44ad-9e37-98428ba614a4";
+        });
+    </script>
+</body>
+
+</html>

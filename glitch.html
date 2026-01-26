@@ -1,372 +1,294 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SYSTEM FAILURE</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SYSTEM FAILURE</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Manrope:wght@200;300;400;500&family=Playfair+Display:ital@0;1&display=swap"
-    rel="stylesheet"
-  />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: "Courier New", monospace;
+            position: relative;
+            color: #fff;
+        }
 
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #000;
-      font-family: "Courier New", monospace;
-      position: relative;
-      color: #fff;
-    }
+        /* Noise background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 0, 0, 0.03) 2px,
+                    rgba(255, 0, 0, 0.03) 4px),
+                repeating-linear-gradient(90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 255, 0.03) 2px,
+                    rgba(0, 255, 255, 0.03) 4px);
+            opacity: 0.3;
+            z-index: 1;
+            pointer-events: none;
+            animation: noise 0.2s infinite;
+        }
 
-    /* Noise background */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-image:
-        repeating-linear-gradient(0deg,
-          transparent,
-          transparent 2px,
-          rgba(255, 0, 0, 0.03) 2px,
-          rgba(255, 0, 0, 0.03) 4px),
-        repeating-linear-gradient(90deg,
-          transparent,
-          transparent 2px,
-          rgba(0, 255, 255, 0.03) 2px,
-          rgba(0, 255, 255, 0.03) 4px);
-      opacity: 0.3;
-      z-index: 1;
-      pointer-events: none;
-      animation: noise 0.2s infinite;
-    }
+        /* Scanlines */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg,
+                    rgba(0, 0, 0, 0.15),
+                    rgba(0, 0, 0, 0.15) 1px,
+                    transparent 1px,
+                    transparent 2px);
+            z-index: 2;
+            pointer-events: none;
+        }
 
-    /* Scanlines */
-    body::after {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.15),
-        rgba(0, 0, 0, 0.15) 1px,
-        transparent 1px,
-        transparent 2px
-      );
-      z-index: 2;
-      pointer-events: none;
-    }
+        @keyframes noise {
 
-    @keyframes noise {
-      0%, 100% { opacity: 0.3; transform: translate(0, 0); }
-      10% { opacity: 0.4; transform: translate(-2px, 1px); }
-      20% { opacity: 0.25; transform: translate(1px, -1px); }
-      30% { opacity: 0.35; transform: translate(0, 0); }
-      40% { opacity: 0.3; transform: translate(1px, 0); }
-      50% { opacity: 0.4; transform: translate(-1px, 1px); }
-      60% { opacity: 0.25; transform: translate(0, -1px); }
-      70% { opacity: 0.35; transform: translate(0, 0); }
-      80% { opacity: 0.3; transform: translate(1px, 1px); }
-      90% { opacity: 0.4; transform: translate(-1px, 0); }
-    }
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: translate(0, 0);
+            }
 
-    .glitch-page {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 10;
-      color: red;
-      font-weight: bold;
-      text-align: center;
-    }
+            10% {
+                opacity: 0.4;
+                transform: translate(-2px, 1px);
+            }
 
-    .glitch-title {
-      font-size: 5rem;
-      text-shadow:
-        0 0 20px red,
-        2px 0 0 rgba(255, 0, 0, 0.7),
-        -2px 0 0 rgba(0, 255, 255, 0.7);
-      margin-bottom: 20px;
-      animation: glitch-text-anim 0.3s infinite;
-      position: relative;
-      z-index: 20;
-    }
+            20% {
+                opacity: 0.25;
+                transform: translate(1px, -1px);
+            }
 
-    .glitch-instruction {
-      font-size: 3rem;
-      color: white;
-      margin-bottom: 10px;
-      text-shadow:
-        0 0 10px rgba(255, 255, 255, 0.8),
-        0 0 20px rgba(255, 255, 255, 0.5);
-      position: relative;
-      z-index: 20;
-    }
+            30% {
+                opacity: 0.35;
+                transform: translate(0, 0);
+            }
 
-    .glitch-hint {
-      font-size: 1.5rem;
-      color: #aaa;
-      margin-top: 20px;
-      text-shadow: 0 0 5px rgba(170, 170, 170, 0.5);
-      position: relative;
-      z-index: 20;
-    }
+            40% {
+                opacity: 0.3;
+                transform: translate(1px, 0);
+            }
 
-    @keyframes glitch-text-anim {
-      0% { transform: translate(0); }
-      20% { transform: translate(-2px, 2px); }
-      40% { transform: translate(-2px, -2px); }
-      60% { transform: translate(2px, 2px); }
-      80% { transform: translate(2px, -2px); }
-      100% { transform: translate(0); }
-    }
+            50% {
+                opacity: 0.4;
+                transform: translate(-1px, 1px);
+            }
 
-    /* 透明入力（モバイルでキーボードを出すため） */
-    .wake-input {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      border: none;
-      background: transparent;
-      color: transparent;
-      caret-color: transparent;
-      z-index: 15;
-    }
+            60% {
+                opacity: 0.25;
+                transform: translate(0, -1px);
+            }
 
-    /* 入力フィードバック */
-    .key-feedback {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 12rem;
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.7);
-      text-shadow:
-        0 0 10px rgba(255, 255, 255, 0.5),
-        0 0 30px rgba(255, 0, 0, 0.4);
-      z-index: 50;
-      pointer-events: none;
-      user-select: none;
-      mix-blend-mode: screen;
-    }
+            70% {
+                opacity: 0.35;
+                transform: translate(0, 0);
+            }
 
-    /* 最終オーバーレイ */
-    #intrusion-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.92);
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 24px;
-    }
+            80% {
+                opacity: 0.3;
+                transform: translate(1px, 1px);
+            }
 
-    .terminal-text {
-      max-width: 900px;
-      width: 100%;
-      color: rgba(255,255,255,0.9);
-      font-size: 1.2rem;
-      line-height: 1.7;
-      white-space: pre-wrap;
-      text-shadow: 0 0 8px rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 12px;
-      padding: 20px;
-      background: rgba(255,255,255,0.03);
-    }
+            90% {
+                opacity: 0.4;
+                transform: translate(-1px, 0);
+            }
+        }
 
-    .mulberry-btn {
-      margin-top: 18px;
-      padding: 12px 18px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.25);
-      background: rgba(255,255,255,0.08);
-      color: rgba(255,255,255,0.92);
-      cursor: pointer;
-      font-size: 1rem;
-      transition: transform 0.12s ease, background 0.12s ease;
-    }
-    .mulberry-btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.12); }
+        .glitch-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.72);
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+        }
 
-    @media (max-width: 768px) {
-      .glitch-title { font-size: 3rem; }
-      .glitch-instruction { font-size: 1.5rem; padding: 0 20px; }
-      .glitch-hint { font-size: 1rem; }
-      .terminal-text { font-size: 1rem; padding: 16px; }
-      .key-feedback { font-size: 8rem; }
-    }
-  </style>
+        .glitch-title {
+            font-size: 5rem;
+            color: red;
+            font-weight: 700;
+            text-shadow:
+                0 0 20px red,
+                2px 0 0 rgba(255, 0, 0, 0.7),
+                -2px 0 0 rgba(0, 255, 255, 0.7);
+            margin-bottom: 20px;
+            animation: glitch-text-anim 0.3s infinite;
+            position: relative;
+            z-index: 20;
+        }
+
+        .glitch-instruction {
+            font-size: 2.2rem;
+            color: white;
+            margin-bottom: 12px;
+            text-shadow:
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(255, 255, 255, 0.5);
+            position: relative;
+            z-index: 20;
+        }
+
+        .glitch-hint {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-top: 10px;
+            text-shadow: 0 0 5px rgba(170, 170, 170, 0.5);
+            position: relative;
+            z-index: 20;
+        }
+
+        @keyframes glitch-text-anim {
+            0% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-2px, 2px);
+            }
+
+            40% {
+                transform: translate(-2px, -2px);
+            }
+
+            60% {
+                transform: translate(2px, 2px);
+            }
+
+            80% {
+                transform: translate(2px, -2px);
+            }
+
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        .key-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.7);
+            text-shadow:
+                0 0 10px rgba(255, 255, 255, 0.5),
+                0 0 30px rgba(255, 0, 0, 0.4);
+            z-index: 50;
+            pointer-events: none;
+            user-select: none;
+            mix-blend-mode: screen;
+        }
+
+        @media (max-width: 768px) {
+            .glitch-title {
+                font-size: 3rem;
+            }
+
+            .glitch-instruction {
+                font-size: 1.4rem;
+            }
+
+            .key-feedback {
+                font-size: 6rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <div class="glitch-page" id="glitch-page">
-    <div class="glitch-title">SYSTEM FAILURE</div>
-    <div class="glitch-instruction">TYPE "WAKE" TO REBOOT</div>
-    <div class="glitch-hint">TAP SCREEN TO OPEN KEYBOARD</div>
-  </div>
+    <div class="glitch-page">
+        <div class="glitch-title">SYSTEM FAILURE</div>
+        <div class="glitch-instruction">TYPE "WAKE" TO REBOOT</div>
+        <div class="glitch-hint">Keyboard: W A K E</div>
+    </div>
 
-  <!-- 透明入力：1個だけ -->
-  <input class="wake-input" id="wake-input" type="text" inputmode="text" aria-label="Wake input" />
-
-  <script>
-    // Flash effect loop
-    (function flashLoop() {
-      if (Math.random() > 0.8) {
-        const el = document.createElement("div");
-        el.style.cssText = `
+    <script>
+        // Flash effect loop
+        (function flashLoop() {
+            if (Math.random() > 0.82) {
+                const el = document.createElement("div");
+                el.style.cssText = `
           position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
           background: ${Math.random() > 0.5 ? "white" : "red"};
           opacity: ${Math.random() * 0.3};
           z-index: 999; pointer-events: none; mix-blend-mode: exclusion;
         `;
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 100);
-      }
-      setTimeout(flashLoop, 150);
-    })();
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 100);
+            }
+            setTimeout(flashLoop, 150);
+        })();
 
-    // WAKE input detection
-    let keyBuffer = "";
+        // WAKE input detection (PC: keydown only)
+        let keyBuffer = "";
 
-    const wakeInput = document.getElementById("wake-input");
-    wakeInput.setAttribute("autocomplete", "off");
-    wakeInput.setAttribute("autocorrect", "off");
-    wakeInput.setAttribute("autocapitalize", "off");
-    wakeInput.setAttribute("spellcheck", "false");
-
-    function showKeyFeedback(char) {
-      const fb = document.createElement("div");
-      fb.className = "key-feedback";
-      fb.textContent = char;
-      document.body.appendChild(fb);
-      setTimeout(() => fb.remove(), 200);
-    }
-
-    function showFinale() {
-      // 既存があれば再利用
-      let overlay = document.getElementById("intrusion-overlay");
-      if (!overlay) {
-        overlay = document.createElement("div");
-        overlay.id = "intrusion-overlay";
-        document.body.appendChild(overlay);
-      }
-      overlay.innerHTML = `<div class="terminal-text"></div>`;
-
-      const finalMsg =
-        "あなたは夢から覚めました。\n" +
-        "もう遊びに行く時間です。\n\n" +
-        "現実は、ここにあります\n" +
-        "あなたの目の前に広がっています。\n\n" +
-        "...それとも、まだ思い出せませんか？";
-
-      const textEl = overlay.querySelector(".terminal-text");
-      typeWriter(textEl, finalMsg, () => {
-        setTimeout(() => {
-          const btn = document.createElement("button");
-          btn.className = "mulberry-btn";
-          btn.innerText = "今日もあのBARに飲みに行く";
-          btn.onclick = () => {
-            window.location.href = "https://cluster.mu/w/1c331560-bc78-44ad-9e37-98428ba614a4";
-          };
-          overlay.appendChild(btn);
-        }, 800);
-      });
-    }
-
-    function handleCharInput(char) {
-      if (!char) return;
-
-      keyBuffer += char;
-      if (keyBuffer.length > 10) keyBuffer = keyBuffer.slice(-10);
-
-      // Visual feedback
-      showKeyFeedback(char);
-
-      // Check for WAKE sequence
-      if (keyBuffer.toUpperCase().endsWith("WAKE")) {
-        const STATE_KEY = "bar_sanctuary_state";
-        try {
-          const s = JSON.parse(localStorage.getItem(STATE_KEY)) || {};
-          s.phase = 2;
-          localStorage.setItem(STATE_KEY, JSON.stringify(s));
-        } catch (e) {}
-
-        // Show finale
-        showFinale();
-
-        // Clean up input state
-        keyBuffer = "";
-        wakeInput.value = "";
-        wakeInput.style.display = "none"; // 以後入力不要なら非表示
-      }
-    }
-
-    // Desktop keyboard input（2重入力を防ぐ：e.key のみ使用）
-    document.addEventListener("keydown", (e) => {
-      const key = (e.key || "").toUpperCase();
-      if (["W", "A", "K", "E"].includes(key)) {
-        handleCharInput(key);
-      }
-    });
-
-    // Mobile input handling（最後の1文字だけ拾って即クリア）
-    wakeInput.addEventListener("input", (e) => {
-      const v = (e.target.value || "").toUpperCase();
-      const last = v.slice(-1);
-      if (["W", "A", "K", "E"].includes(last)) {
-        handleCharInput(last);
-      }
-      e.target.value = "";
-    });
-
-    // Tap/click to focus transparent input (for mobile keyboard)
-    document.addEventListener("pointerdown", (e) => {
-      // ボタン等の操作は邪魔しない
-      if (!e.target.closest("a, button, textarea")) {
-        // iOS対策：ユーザー操作内で focus する
-        try {
-          wakeInput.style.display = "block";
-          wakeInput.focus({ preventScroll: true });
-        } catch (err) {
-          // ignore
+        function showKeyFeedback(char) {
+            const fb = document.createElement("div");
+            fb.className = "key-feedback";
+            fb.textContent = char;
+            document.body.appendChild(fb);
+            setTimeout(() => fb.remove(), 160);
         }
-      }
-    });
 
-    function typeWriter(el, text, cb) {
-      let i = 0;
-      el.innerText = "";
-      const speed = 40;
+        function pushChar(char) {
+            keyBuffer += char;
+            if (keyBuffer.length > 10) keyBuffer = keyBuffer.slice(-10);
+            showKeyFeedback(char);
 
-      (function step() {
-        if (i < text.length) {
-          el.innerText += text.charAt(i);
-          i++;
-          setTimeout(step, speed);
-        } else if (cb) {
-          cb();
+            if (keyBuffer.endsWith("WAKE")) {
+                // 任意: 状態保存したいなら残す
+                const STATE_KEY = "bar_sanctuary_state";
+                try {
+                    const s = JSON.parse(localStorage.getItem(STATE_KEY)) || {};
+                    s.phase = 2;
+                    localStorage.setItem(STATE_KEY, JSON.stringify(s));
+                } catch (e) { }
+
+                // ending.htmlへ移動
+                window.location.href = "ending.html";
+            }
         }
-      })();
-    }
-  </script>
+
+        document.addEventListener("keydown", (e) => {
+            const key = (e.key || "").toUpperCase();
+            if (["W", "A", "K", "E"].includes(key)) {
+                pushChar(key);
+            }
+        });
+    </script>
 </body>
+
 </html>
