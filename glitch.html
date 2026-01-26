@@ -195,266 +195,265 @@
 
             100% {
                 transform: translate(0);
-            }
-        }
-
-        .key-feedback {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 15rem;
-            color: red;
-            opacity: 0.8;
-            z-index: 10001;
-            pointer-events: none;
-            text-shadow: 0 0 20px black;
-            font-weight: bold;
-            font-family: sans-serif;
-            animation: fadeOut 0.2s forwards;
-        }
-
-        @keyframes fadeOut {
-            from {
-                opacity: 0.8;
-            }
-
-            to {
-                opacity: 0;
-            }
-        }
-
-        /* Finale overlay */
-        #intrusion-overlay {
-            z-index: 200000;
-            background: #000;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-        }
-
-        .terminal-text {
-            font-family: 'Courier New', monospace;
-            font-size: 1.5rem;
-            line-height: 2;
-            white-space: pre-wrap;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .mulberry-btn {
-            border: 1px solid #fff;
-            background: transparent;
-            color: #fff;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            margin-top: 40px;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
-            transition: 0.3s;
-        }
-
-        .mulberry-btn:hover {
-            background: #fff;
-            color: #000;
-        }
-
-        /* News Section Mobile Adjustments */
-        .news-header-section {
-            padding: 60px 20px 30px;
-        }
-
-        .news-container {
-            padding: 10px;
-        }
-
-        /* Responsive adjustments for glitch page */
-        @media (max-width: 768px) {
-            .glitch-title {
-                font-size: 2.5rem;
-            }
-
-            .glitch-instruction {
-                font-size: 1.5rem;
-                padding: 0 20px;
-            }
-
-            .glitch-hint {
-                font-size: 1rem;
-            }
-
-            .terminal-text {
-                font-size: 1rem;
-                padding: 20px;
-            }
-
-            .key-feedback {
-                font-size: 8rem;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <div class="glitch-page">
-        <div class="glitch-title">SYSTEM FAILURE</div>
-        <div class="glitch-instruction">TYPE "WAKE" TO REBOOT</div>
-        <div class="glitch-hint">TAP SCREEN TO OPEN KEYBOARD</div>
-    </div>
-
-    <script>
-        // Flash effect loop
-        const flashLoop = () => {
-            if (Math.random() > 0.8) {
-                const el = document.createElement('div');
-                el.style.cssText = `
-                    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-                    background: ${Math.random() > 0.5 ? 'white' : 'red'};
-                    opacity: ${Math.random() * 0.3};
-                    z-index: 999; pointer-events: none; mix-blend-mode: exclusion;
-                `;
-                document.body.appendChild(el);
-                setTimeout(() => el.remove(), 100);
-            }
-            setTimeout(flashLoop, 150);
-        };
-        flashLoop();
-
-        // WAKE input detection
-        let keyBuffer = "";
-
-        // Create hidden input for mobile keyboard support
-        const hiddenInput = document.createElement('input');
-        hiddenInput.type = 'text';
-        hiddenInput.style.cssText = `
-            position: fixed;
-            top: -100px;
-            left: -100px;
-            opacity: 0;
-            pointer-events: none;
-            z-index: -1;
-        `;
-        hiddenInput.setAttribute('autocomplete', 'off');
-        hiddenInput.setAttribute('autocorrect', 'off');
-        hiddenInput.setAttribute('autocapitalize', 'off');
-        hiddenInput.setAttribute('spellcheck', 'false');
-        document.body.appendChild(hiddenInput);
-
-        const handleCharInput = (char) => {
-            if (char) {
-                keyBuffer += char;
-                if (keyBuffer.length > 10) keyBuffer = keyBuffer.slice(-5);
-                console.log("Buffer:", keyBuffer);
-
-                // Visual Feedback
-                const fb = document.createElement('div');
-                fb.className = 'key-feedback';
-                fb.innerText = char;
-                document.body.appendChild(fb);
-                setTimeout(() => fb.remove(), 200);
-
-                // Check for WAKE sequence
-                if (keyBuffer.toUpperCase().endsWith("WAKE")) {
-                    // Update state to phase 2
-                    const STATE_KEY = 'bar_sanctuary_state';
-                    try {
-                        const s = JSON.parse(localStorage.getItem(STATE_KEY)) || {};
-                        s.phase = 2;
-                        localStorage.setItem(STATE_KEY, JSON.stringify(s));
-                    } catch (e) { }
-
-                    // Show finale
-                    const gp = document.querySelector('.glitch-page');
-                    if (gp) gp.remove();
-
-                    let overlay = document.getElementById('intrusion-overlay');
-                    if (!overlay) {
-                        overlay = document.createElement('div');
-                        overlay.id = 'intrusion-overlay';
-                        document.body.appendChild(overlay);
-                    }
-                    overlay.innerHTML = `<div class="terminal-text"></div>`;
-
-                    const finalMsg = "あなたは夢から覚めました。\nもう遊びに行く時間です。\n\n現実は、ここにあります\nあなたの目の前に広がっています。\n\n...それとも、まだ思い出せませんか？";
-
-                    const textEl = overlay.querySelector('.terminal-text');
-                    typeWriter(textEl, finalMsg, () => {
-                        setTimeout(() => {
-                            const btn = document.createElement('button');
-                            btn.className = 'mulberry-btn';
-                            btn.innerText = "今日もあのBARに飲みに行く";
-                            btn.onclick = () => {
-                                window.location.href = "https://cluster.mu/w/1c331560-bc78-44ad-9e37-98428ba614a4";
-                            };
-                            overlay.appendChild(btn);
-                        }, 1000);
-                    });
-
-                    keyBuffer = "";
-                    hiddenInput.value = ""; // Clear input
-                }
-            }
-        };
-
-        // Desktop keyboard input
-        document.addEventListener('keydown', (e) => {
-            let char = '';
-            if (e.code === 'KeyW') char = 'W';
-            else if (e.code === 'KeyA') char = 'A';
-            else if (e.code === 'KeyK') char = 'K';
-            else if (e.code === 'KeyE') char = 'E';
-
-            handleCharInput(char);
-        });
-
-        // Mobile input handling
-        hiddenInput.addEventListener('input', (e) => {
-            const value = e.target.value.toUpperCase();
-            if (value.length > 0) {
-                const lastChar = value[value.length - 1];
-                if (['W', 'A', 'K', 'E'].includes(lastChar)) {
-                    handleCharInput(lastChar);
-                }
-            }
-        });
-
-        // Touch/Click to focus hidden input (for mobile keyboard)
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('a, button, input, textarea')) {
-                hiddenInput.focus();
-            }
-        });
-
-        document.addEventListener('touchend', (e) => {
-            if (!e.target.closest('a, button, input, textarea')) {
-                hiddenInput.focus();
-            }
-        });
-
-        function typeWriter(el, text, cb) {
-            let i = 0;
-            el.innerText = "";
-            const speed = 40;
-
-            function step() {
-                if (i < text.length) {
-                    el.innerText += text.charAt(i);
-                    i++;
-                    setTimeout(step, speed);
-                } else if (cb) {
-                    cb();
-                }
-            }
-            step();
-        }
-    </script>
-</body>
-
-</html>
+        diff --git a/glitch.html b/glitch.html
+index 52f1fb0eb3c8d3c1d79ecf40ec3ca7aa07afb1b4..b1bf50fe6ec0877d07346736714f16c7fb632c76 100644
+--- a/glitch.html
++++ b/glitch.html
+@@ -118,50 +118,64 @@
+ 
+             90% {
+                 opacity: 0.4;
+                 transform: translate(-1px, 0);
+             }
+         }
+ 
+         .glitch-page {
+             position: fixed;
+             top: 0;
+             left: 0;
+             width: 100vw;
+             height: 100vh;
+             display: flex;
+             flex-direction: column;
+             justify-content: center;
+             align-items: center;
+             background: rgba(0, 0, 0, 0.7);
+             z-index: 10;
+             color: red;
+             font-family: 'Courier New', monospace;
+             font-weight: bold;
+             text-align: center;
+         }
+ 
++        .wake-input {
++            position: fixed;
++            top: 0;
++            left: 0;
++            width: 100%;
++            height: 100%;
++            opacity: 0;
++            border: none;
++            background: transparent;
++            color: transparent;
++            caret-color: transparent;
++            z-index: 15;
++        }
++
+         .glitch-title {
+             font-size: 5rem;
+             text-shadow:
+                 0 0 20px red,
+                 2px 0 0 rgba(255, 0, 0, 0.7),
+                 -2px 0 0 rgba(0, 255, 255, 0.7);
+             margin-bottom: 20px;
+             animation: glitch-text-anim 0.3s infinite;
+             position: relative;
+             z-index: 20;
+         }
+ 
+         .glitch-instruction {
+             font-size: 3rem;
+             color: white;
+             margin-bottom: 10px;
+             text-shadow:
+                 0 0 10px rgba(255, 255, 255, 0.8),
+                 0 0 20px rgba(255, 255, 255, 0.5);
+             position: relative;
+             z-index: 20;
+         }
+ 
+         .glitch-hint {
+             font-size: 1.5rem;
+@@ -286,88 +300,79 @@
+                 padding: 0 20px;
+             }
+ 
+             .glitch-hint {
+                 font-size: 1rem;
+             }
+ 
+             .terminal-text {
+                 font-size: 1rem;
+                 padding: 20px;
+             }
+ 
+             .key-feedback {
+                 font-size: 8rem;
+             }
+         }
+     </style>
+ </head>
+ 
+ <body>
+     <div class="glitch-page">
+         <div class="glitch-title">SYSTEM FAILURE</div>
+         <div class="glitch-instruction">TYPE "WAKE" TO REBOOT</div>
+         <div class="glitch-hint">TAP SCREEN TO OPEN KEYBOARD</div>
+     </div>
++    <input class="wake-input" id="wake-input" type="text" inputmode="text" aria-label="Wake input" />
+ 
+     <script>
+         // Flash effect loop
+         const flashLoop = () => {
+             if (Math.random() > 0.8) {
+                 const el = document.createElement('div');
+                 el.style.cssText = `
+                     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                     background: ${Math.random() > 0.5 ? 'white' : 'red'};
+                     opacity: ${Math.random() * 0.3};
+                     z-index: 999; pointer-events: none; mix-blend-mode: exclusion;
+                 `;
+                 document.body.appendChild(el);
+                 setTimeout(() => el.remove(), 100);
+             }
+             setTimeout(flashLoop, 150);
+         };
+         flashLoop();
+ 
+         // WAKE input detection
+         let keyBuffer = "";
+ 
+-        // Create hidden input for mobile keyboard support
+-        const hiddenInput = document.createElement('input');
+-        hiddenInput.type = 'text';
+-        hiddenInput.style.cssText = `
+-            position: fixed;
+-            top: -100px;
+-            left: -100px;
+-            opacity: 0;
+-            pointer-events: none;
+-            z-index: -1;
+-        `;
+-        hiddenInput.setAttribute('autocomplete', 'off');
+-        hiddenInput.setAttribute('autocorrect', 'off');
+-        hiddenInput.setAttribute('autocapitalize', 'off');
+-        hiddenInput.setAttribute('spellcheck', 'false');
+-        document.body.appendChild(hiddenInput);
++        // Create transparent input for mobile keyboard support
++        const wakeInput = document.getElementById('wake-input');
++        wakeInput.setAttribute('autocomplete', 'off');
++        wakeInput.setAttribute('autocorrect', 'off');
++        wakeInput.setAttribute('autocapitalize', 'off');
++        wakeInput.setAttribute('spellcheck', 'false');
+ 
+         const handleCharInput = (char) => {
+             if (char) {
+                 keyBuffer += char;
+                 if (keyBuffer.length > 10) keyBuffer = keyBuffer.slice(-5);
+                 console.log("Buffer:", keyBuffer);
+ 
+                 // Visual Feedback
+                 const fb = document.createElement('div');
+                 fb.className = 'key-feedback';
+                 fb.innerText = char;
+                 document.body.appendChild(fb);
+                 setTimeout(() => fb.remove(), 200);
+ 
+                 // Check for WAKE sequence
+                 if (keyBuffer.toUpperCase().endsWith("WAKE")) {
+                     // Update state to phase 2
+                     const STATE_KEY = 'bar_sanctuary_state';
+                     try {
+                         const s = JSON.parse(localStorage.getItem(STATE_KEY)) || {};
+                         s.phase = 2;
+                         localStorage.setItem(STATE_KEY, JSON.stringify(s));
+                     } catch (e) { }
+ 
+                     // Show finale
+@@ -376,85 +381,87 @@
+ 
+                     let overlay = document.getElementById('intrusion-overlay');
+                     if (!overlay) {
+                         overlay = document.createElement('div');
+                         overlay.id = 'intrusion-overlay';
+                         document.body.appendChild(overlay);
+                     }
+                     overlay.innerHTML = `<div class="terminal-text"></div>`;
+ 
+                     const finalMsg = "あなたは夢から覚めました。\nもう遊びに行く時間です。\n\n現実は、ここにあります\nあなたの目の前に広がっています。\n\n...それとも、まだ思い出せませんか？";
+ 
+                     const textEl = overlay.querySelector('.terminal-text');
+                     typeWriter(textEl, finalMsg, () => {
+                         setTimeout(() => {
+                             const btn = document.createElement('button');
+                             btn.className = 'mulberry-btn';
+                             btn.innerText = "今日もあのBARに飲みに行く";
+                             btn.onclick = () => {
+                                 window.location.href = "https://cluster.mu/w/1c331560-bc78-44ad-9e37-98428ba614a4";
+                             };
+                             overlay.appendChild(btn);
+                         }, 1000);
+                     });
+ 
+                     keyBuffer = "";
+-                    hiddenInput.value = ""; // Clear input
++                    wakeInput.value = ""; // Clear input
++                    wakeInput.style.display = 'none';
+                 }
+             }
+         };
+ 
+         // Desktop keyboard input
+         document.addEventListener('keydown', (e) => {
+             let char = '';
+             if (e.code === 'KeyW') char = 'W';
+             else if (e.code === 'KeyA') char = 'A';
+             else if (e.code === 'KeyK') char = 'K';
+             else if (e.code === 'KeyE') char = 'E';
+ 
+             handleCharInput(char);
+         });
+ 
+         // Mobile input handling
+-        hiddenInput.addEventListener('input', (e) => {
++        wakeInput.addEventListener('input', (e) => {
+             const value = e.target.value.toUpperCase();
+             if (value.length > 0) {
+                 const lastChar = value[value.length - 1];
+                 if (['W', 'A', 'K', 'E'].includes(lastChar)) {
+                     handleCharInput(lastChar);
+                 }
+             }
++            e.target.value = '';
+         });
+ 
+-        // Touch/Click to focus hidden input (for mobile keyboard)
++        // Touch/Click to focus transparent input (for mobile keyboard)
+         document.addEventListener('click', (e) => {
+-            if (!e.target.closest('a, button, input, textarea')) {
+-                hiddenInput.focus();
++            if (!e.target.closest('a, button, textarea')) {
++                wakeInput.focus();
+             }
+         });
+ 
+         document.addEventListener('touchend', (e) => {
+-            if (!e.target.closest('a, button, input, textarea')) {
+-                hiddenInput.focus();
++            if (!e.target.closest('a, button, textarea')) {
++                wakeInput.focus();
+             }
+         });
+ 
+         function typeWriter(el, text, cb) {
+             let i = 0;
+             el.innerText = "";
+             const speed = 40;
+ 
+             function step() {
+                 if (i < text.length) {
+                     el.innerText += text.charAt(i);
+                     i++;
+                     setTimeout(step, speed);
+                 } else if (cb) {
+                     cb();
+                 }
+             }
+             step();
+         }
+     </script>
+ </body>
+ 
+-</html>
+\ No newline at end of file
++</html>
