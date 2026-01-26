@@ -287,46 +287,23 @@
                  document.body.appendChild(fb);
                  setTimeout(() => fb.remove(), 200);
  
-                 // Check for WAKE sequence
-                 if (keyBuffer.toUpperCase().endsWith("WAKE")) {
-                     // Update state to phase 2
-                     const STATE_KEY = 'bar_sanctuary_state';
-                     try {
-                         const s = JSON.parse(localStorage.getItem(STATE_KEY)) || {};
-                         s.phase = 2;
-                         localStorage.setItem(STATE_KEY, JSON.stringify(s));
-                     } catch (e) { }
- 
-                     // Show finale
-                     let overlay = document.getElementById('intrusion-overlay');
-                     if (!overlay) {
-                         overlay = document.createElement('div');
-                         overlay.id = 'intrusion-overlay';
-                         document.body.appendChild(overlay);
-                     }
-                     overlay.innerHTML = `<div class="terminal-text"></div>`;
- 
-                     const finalMsg = "あなたは夢から覚めました。\nもう遊びに行く時間です。\n\n現実は、ここにあります\nあなたの目の前に広がっています。\n\n...それとも、まだ思い出せませんか？";
- 
-                     const textEl = overlay.querySelector('.terminal-text');
-                     typeWriter(textEl, finalMsg, () => {
-                         setTimeout(() => {
-                             const btn = document.createElement('button');
-                             btn.className = 'mulberry-btn';
-                             btn.innerText = "今日もあのBARに飲みに行く";
-                             btn.onclick = () => {
-                                 window.location.href = "https://cluster.mu/w/1c331560-bc78-44ad-9e37-98428ba614a4";
-                             };
-                             overlay.appendChild(btn);
-                         }, 1000);
-                     });
- 
-                     keyBuffer = "";
-                     wakeInput.value = ""; // Clear input
-                     wakeInput.style.display = 'none';
-                 }
-             }
-         };
+                // Check for WAKE sequence
+                if (keyBuffer.toUpperCase().endsWith("WAKE")) {
+                    // Update state to phase 2
+                    const STATE_KEY = 'bar_sanctuary_state';
+                    try {
+                        const s = JSON.parse(localStorage.getItem(STATE_KEY)) || {};
+                        s.phase = 2;
+                        localStorage.setItem(STATE_KEY, JSON.stringify(s));
+                    } catch (e) { }
+
+                    keyBuffer = "";
+                    wakeInput.value = ""; // Clear input
+                    wakeInput.style.display = 'none';
+                    window.location.href = "finale.html";
+                }
+            }
+        };
 
          // Desktop keyboard input
          document.addEventListener('keydown', (e) => {
@@ -360,23 +337,6 @@
                  wakeInput.focus();
              }
          });
- 
-         function typeWriter(el, text, cb) {
-             let i = 0;
-             el.innerText = "";
-             const speed = 40;
- 
-             function step() {
-                 if (i < text.length) {
-                     el.innerText += text.charAt(i);
-                     i++;
-                     setTimeout(step, speed);
-                 } else if (cb) {
-                     cb();
-                 }
-             }
-             step();
-         }
-     </script>
+    </script>
 </body>
 </html>

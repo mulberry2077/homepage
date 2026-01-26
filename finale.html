@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FINAL REBOOT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Manrope:wght@200;300;400;500&family=Playfair+Display:ital@0;1&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #000;
+            color: #e5e5e5;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 0, 0, 0.03) 2px,
+                    rgba(255, 0, 0, 0.03) 4px),
+                repeating-linear-gradient(90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 255, 0.03) 2px,
+                    rgba(0, 255, 255, 0.03) 4px);
+            opacity: 0.3;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(0deg,
+                    rgba(0, 0, 0, 0.2),
+                    rgba(0, 0, 0, 0.2) 1px,
+                    transparent 1px,
+                    transparent 2px);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .finale {
+            position: relative;
+            z-index: 3;
+            width: min(90vw, 900px);
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px 32px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+        }
+
+        .finale-title {
+            font-size: 2.4rem;
+            color: #ff3b3b;
+            margin-bottom: 20px;
+            letter-spacing: 0.1em;
+        }
+
+        .terminal-text {
+            white-space: pre-line;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .finale-actions {
+            margin-top: 32px;
+        }
+
+        .mulberry-btn {
+            background: #ff3b3b;
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            cursor: pointer;
+            letter-spacing: 0.05em;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .mulberry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 59, 59, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .finale {
+                padding: 28px 20px;
+            }
+
+            .finale-title {
+                font-size: 1.8rem;
+            }
+
+            .terminal-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="finale">
+        <div class="finale-title">REBOOT COMPLETE</div>
+        <div class="terminal-text" id="finale-text"></div>
+        <div class="finale-actions">
+            <button class="mulberry-btn" id="finale-button">今日もあのBARに飲みに行く</button>
+        </div>
+    </div>
+
+    <script>
+        const finalMsg = "あなたは夢から覚めました。\nもう遊びに行く時間です。\n\n現実は、ここにあります\nあなたの目の前に広がっています。\n\n...それとも、まだ思い出せませんか？";
+        const textEl = document.getElementById('finale-text');
+        const button = document.getElementById('finale-button');
+
+        const typeWriter = (el, text, cb) => {
+            let i = 0;
+            const speed = 40;
+
+            const step = () => {
+                if (i < text.length) {
+                    el.textContent += text.charAt(i);
+                    i += 1;
+                    setTimeout(step, speed);
+                } else if (cb) {
+                    cb();
+                }
+            };
+
+            el.textContent = '';
+            step();
+        };
+
+        button.addEventListener('click', () => {
+            window.location.href = "https://cluster.mu/w/1c331560-bc78-44ad-9e37-98428ba614a4";
+        });
+
+        typeWriter(textEl, finalMsg);
+    </script>
+</body>
+
+</html>
