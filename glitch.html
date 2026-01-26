@@ -18,7 +18,6 @@
       color: #fff;
     }
 
-    /* Noise background */
     body::before {
       content: "";
       position: fixed;
@@ -42,7 +41,6 @@
       animation: noise 0.2s infinite;
     }
 
-    /* Scanlines */
     body::after {
       content: "";
       position: fixed;
@@ -145,7 +143,7 @@
       mix-blend-mode: screen;
     }
 
-    /* スマホ向け：見える入力欄（ここをタップしてキーボードを出す） */
+    /* スマホ向け：見える入力欄 */
     .wake-panel {
       margin-top: 18px;
       display: flex;
@@ -177,12 +175,6 @@
       color: rgba(255,255,255,0.45);
     }
 
-    /* PCでは邪魔にならないよう小さめに */
-    @media (min-width: 769px) {
-      .wake-panel { opacity: 0.75; }
-      .wake-input { width: 280px; }
-    }
-
     @media (max-width: 768px) {
       .glitch-title { font-size: 3rem; }
       .glitch-instruction { font-size: 1.4rem; }
@@ -197,7 +189,6 @@
     <div class="glitch-instruction">TYPE "WAKE" TO REBOOT</div>
     <div class="glitch-hint">PC: type anywhere / Mobile: tap input</div>
 
-    <!-- スマホ用の「入力する場所」 -->
     <div class="wake-panel">
       <div class="wake-label">ここをタップして「wake」と入力</div>
       <input
@@ -258,17 +249,16 @@
       window.location.href = "ending.html";
     }
 
-    function pushChars(str, withFeedback) {
-      if (!str || redirected) return;
-
-      // アルファベットだけ抽出して大文字化（IME/ペースト対策）
-      const letters = String(str).replace(/[^a-zA-Z]/g, "").toUpperCase();
+    // PC側：1文字ずつ積む（どこでも入力OK）
+    function pushFromKey(char) {
+      if (!char || redirected) return;
+      const letters = String(char).replace(/[^a-zA-Z]/g, "").toUpperCase();
       if (!letters) return;
 
       for (const ch of letters) {
         keyBuffer += ch;
         if (keyBuffer.length > 16) keyBuffer = keyBuffer.slice(-16);
-        if (withFeedback) showKeyFeedback(ch);
+        showKeyFeedback(ch);
         if (keyBuffer.endsWith("WAKE")) {
           redirectToEnding();
           return;
@@ -276,39 +266,53 @@
       }
     }
 
+    // Mobile側：入力欄の「現在値」全体で判定（予測変換/まとめ入力に強い）
+    function checkWholeValueAndRedirect(value) {
+      if (redirected) return;
+      const normalized = String(value).replace(/[^a-zA-Z]/g, "").toUpperCase();
+      // 入力中に WAKE が現れた瞬間に遷移（末尾一致ではなく「含む」判定）
+      if (normalized.includes("WAKE")) {
+        redirectToEnding();
+      }
+    }
+
     // --- PC: どこでも type できる（フォーカス依存を避ける） ---
-    // capture=true で早めに拾い、他要素にフォーカスがあっても取りやすくする
     window.addEventListener("keydown", (e) => {
-      // IME中の Process は visible input / compositionend 側で拾う
       const k = e.key || "";
       if (k.length === 1) {
-        pushChars(k, true);
+        pushFromKey(k);
       }
     }, true);
 
-    // --- Mobile: 見える入力欄から拾う（ユーザーがタップしてキーボード表示） ---
+    // --- Mobile: 見える入力欄 ---
     const wakeVisible = document.getElementById("wake-visible");
 
-    // iOS/Android: input で拾う（文字列で入ってくる）
+    // 入力を消さない：まず判定、遷移しなければ必要に応じて整形（ここではそのまま保持でもOK）
     wakeVisible.addEventListener("input", (e) => {
-      pushChars(e.target.value, false);
-      // 入力欄は常に空に戻す（演出上）
-      e.target.value = "";
+      checkWholeValueAndRedirect(e.target.value);
+      // 遷移していない場合だけ、長くなりすぎないよう軽く制限
+      if (!redirected && e.target.value.length > 20) {
+        e.target.value = e.target.value.slice(-20);
+      }
     });
 
-    // 日本語IME確定時も拾う（念押し）
+    // IME確定時も同様に判定
     wakeVisible.addEventListener("compositionend", (e) => {
-      pushChars(e.data, false);
-      wakeVisible.value = "";
+      checkWholeValueAndRedirect(wakeVisible.value + (e.data || ""));
+      if (!redirected && wakeVisible.value.length > 20) {
+        wakeVisible.value = wakeVisible.value.slice(-20);
+      }
     });
 
-    // スマホで「どこをタップしても入力欄にフォーカス」させたい場合：
-    // ただし iOS はユーザー操作（タップ）内なら focus が効くので pointerdown で寄せる
+    // 「入力が終わったらすぐ」＝ユーザーが確定を押す場合も拾う（保険）
+    wakeVisible.addEventListener("change", (e) => {
+      checkWholeValueAndRedirect(e.target.value);
+    });
+
+    // スマホで「どこをタップしても入力欄にフォーカス」誘導（任意）
     document.addEventListener("pointerdown", (e) => {
-      // 入力欄やボタン等の操作は邪魔しない
       if (redirected) return;
       if (!e.target.closest("input, textarea, button, a")) {
-        // モバイルでのみフォーカス誘導（PCでの邪魔を避ける）
         if (window.matchMedia("(max-width: 768px)").matches) {
           try { wakeVisible.focus({ preventScroll: true }); }
           catch { wakeVisible.focus(); }
