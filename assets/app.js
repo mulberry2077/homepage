@@ -275,22 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Matches if the last 4 valid keystrokes form "WAKE"
     let keyBuffer = "";
 
-    // Create hidden input for mobile keyboard support
-    const hiddenInput = document.createElement('input');
-    hiddenInput.type = 'text';
-    hiddenInput.style.cssText = `
-        position: fixed;
-        top: -100px;
-        left: -100px;
-        opacity: 0;
-        pointer-events: none;
-        z-index: -1;
-    `;
-    hiddenInput.setAttribute('autocomplete', 'off');
-    hiddenInput.setAttribute('autocorrect', 'off');
-    hiddenInput.setAttribute('autocapitalize', 'off');
-    hiddenInput.setAttribute('spellcheck', 'false');
-    document.body.appendChild(hiddenInput);
 
     // Function to handle character input
     const handleCharInput = (char) => {
@@ -321,7 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     return s;
                 });
                 keyBuffer = ""; // Reset
-                hiddenInput.value = ""; // Clear input
             }
         }
     };
@@ -338,56 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
         handleCharInput(char);
     });
 
-    // Mobile input handling
-    hiddenInput.addEventListener('input', (e) => {
-        const value = e.target.value.toUpperCase();
-        if (value.length > 0) {
-            const lastChar = value[value.length - 1];
-            if (['W', 'A', 'K', 'E'].includes(lastChar)) {
-                handleCharInput(lastChar);
-            }
-        }
-    });
 
-    // Touch/Click to focus hidden input (for mobile keyboard)
-    let touchStartTime = 0;
-    document.addEventListener('touchstart', (e) => {
-        touchStartTime = Date.now();
-    });
-
-    document.addEventListener('touchend', (e) => {
-        const touchDuration = Date.now() - touchStartTime;
-        // Only focus if it's a tap (not a scroll)
-        if (touchDuration < 200) {
-            // Don't interfere with links or buttons
-            if (!e.target.closest('a, button, input, textarea')) {
-                hiddenInput.focus();
-                // Show visual hint on first tap in phase 1
-                const s = State.get();
-                if (s.phase >= 1 && !sessionStorage.getItem('mobile_hint_shown')) {
-                    sessionStorage.setItem('mobile_hint_shown', 'true');
-                    const hint = document.createElement('div');
-                    hint.style.cssText = `
-                        position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-                        background: rgba(255, 0, 0, 0.9); color: white; padding: 15px 25px;
-                        border-radius: 8px; z-index: 10002; font-family: var(--font-mono);
-                        font-size: 0.9rem; text-align: center; animation: fadeOut 3s forwards;
-                    `;
-                    hint.innerText = 'キーボードで「WAKE」と入力してください';
-                    document.body.appendChild(hint);
-                    setTimeout(() => hint.remove(), 3000);
-                }
-            }
-        }
-    });
-
-    // Also support click for desktop
-    document.addEventListener('click', (e) => {
-        const s = State.get();
-        if (s.phase >= 1 && !e.target.closest('a, button, input, textarea')) {
-            hiddenInput.focus();
-        }
-    });
 
     // --- NEW LUXURY FEATURES ---
 
