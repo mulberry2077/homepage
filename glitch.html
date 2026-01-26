@@ -265,6 +265,40 @@
             background: #fff;
             color: #000;
         }
+
+        /* News Section Mobile Adjustments */
+        .news-header-section {
+            padding: 60px 20px 30px;
+        }
+
+        .news-container {
+            padding: 10px;
+        }
+
+        /* Responsive adjustments for glitch page */
+        @media (max-width: 768px) {
+            .glitch-title {
+                font-size: 2.5rem;
+            }
+
+            .glitch-instruction {
+                font-size: 1.5rem;
+                padding: 0 20px;
+            }
+
+            .glitch-hint {
+                font-size: 1rem;
+            }
+
+            .terminal-text {
+                font-size: 1rem;
+                padding: 20px;
+            }
+
+            .key-feedback {
+                font-size: 8rem;
+            }
+        }
     </style>
 </head>
 
@@ -272,7 +306,7 @@
     <div class="glitch-page">
         <div class="glitch-title">SYSTEM FAILURE</div>
         <div class="glitch-instruction">TYPE "WAKE" TO REBOOT</div>
-        <div class="glitch-hint">KEYBOARD INPUT REQUIRED</div>
+        <div class="glitch-hint">TAP SCREEN TO OPEN KEYBOARD</div>
     </div>
 
     <script>
@@ -296,13 +330,24 @@
         // WAKE input detection
         let keyBuffer = "";
 
-        document.addEventListener('keydown', (e) => {
-            let char = '';
-            if (e.code === 'KeyW') char = 'W';
-            else if (e.code === 'KeyA') char = 'A';
-            else if (e.code === 'KeyK') char = 'K';
-            else if (e.code === 'KeyE') char = 'E';
+        // Create hidden input for mobile keyboard support
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'text';
+        hiddenInput.style.cssText = `
+            position: fixed;
+            top: -100px;
+            left: -100px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+        `;
+        hiddenInput.setAttribute('autocomplete', 'off');
+        hiddenInput.setAttribute('autocorrect', 'off');
+        hiddenInput.setAttribute('autocapitalize', 'off');
+        hiddenInput.setAttribute('spellcheck', 'false');
+        document.body.appendChild(hiddenInput);
 
+        const handleCharInput = (char) => {
             if (char) {
                 keyBuffer += char;
                 if (keyBuffer.length > 10) keyBuffer = keyBuffer.slice(-5);
@@ -316,7 +361,7 @@
                 setTimeout(() => fb.remove(), 200);
 
                 // Check for WAKE sequence
-                if (keyBuffer.endsWith("WAKE")) {
+                if (keyBuffer.toUpperCase().endsWith("WAKE")) {
                     // Update state to phase 2
                     const STATE_KEY = 'bar_sanctuary_state';
                     try {
@@ -326,7 +371,8 @@
                     } catch (e) { }
 
                     // Show finale
-                    document.querySelector('.glitch-page').remove();
+                    const gp = document.querySelector('.glitch-page');
+                    if (gp) gp.remove();
 
                     let overlay = document.getElementById('intrusion-overlay');
                     if (!overlay) {
@@ -352,7 +398,43 @@
                     });
 
                     keyBuffer = "";
+                    hiddenInput.value = ""; // Clear input
                 }
+            }
+        };
+
+        // Desktop keyboard input
+        document.addEventListener('keydown', (e) => {
+            let char = '';
+            if (e.code === 'KeyW') char = 'W';
+            else if (e.code === 'KeyA') char = 'A';
+            else if (e.code === 'KeyK') char = 'K';
+            else if (e.code === 'KeyE') char = 'E';
+
+            handleCharInput(char);
+        });
+
+        // Mobile input handling
+        hiddenInput.addEventListener('input', (e) => {
+            const value = e.target.value.toUpperCase();
+            if (value.length > 0) {
+                const lastChar = value[value.length - 1];
+                if (['W', 'A', 'K', 'E'].includes(lastChar)) {
+                    handleCharInput(lastChar);
+                }
+            }
+        });
+
+        // Touch/Click to focus hidden input (for mobile keyboard)
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('a, button, input, textarea')) {
+                hiddenInput.focus();
+            }
+        });
+
+        document.addEventListener('touchend', (e) => {
+            if (!e.target.closest('a, button, input, textarea')) {
+                hiddenInput.focus();
             }
         });
 
