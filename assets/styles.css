@@ -975,3 +975,145 @@ footer {
     opacity: 0;
   }
 }
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* --- Mobile Responsive Design --- */
+@media (max-width: 768px) {
+  :root {
+    --header-height: 60px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  /* Header & Navigation */
+  .glass-header {
+    padding: 0 4%;
+    height: var(--header-height);
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .site-title {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  nav ul {
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    font-size: 0.65rem;
+  }
+
+  /* Hero Section */
+  .hero-fullscreen {
+    height: 100vh;
+    min-height: 500px;
+  }
+
+  .hero-tagline {
+    font-size: 2rem;
+    padding: 0 20px;
+  }
+
+  .hero-sub {
+    font-size: 0.85rem;
+    padding: 0 20px;
+  }
+
+  .scroll-indicator {
+    bottom: 20px;
+  }
+
+  .scroll-indicator .line {
+    height: 40px;
+  }
+
+  /* Content Sections */
+  .content-section {
+    padding: 80px 5%;
+    min-height: auto;
+  }
+
+  .section-heading {
+    font-size: 2rem;
+  }
+
+  .section-text {
+    font-size: 1rem;
+  }
+
+  /* Disturbing Text */
+  .disturbing-text {
+    font-size: 2.5rem;
+    padding: 0 20px;
+    text-align: center;
+  }
+
+  /* Flash Hints - Smaller on mobile */
+  .flash-hint {
+    font-size: 1.5rem !important;
+  }
+
+  /* Intrusion Overlay */
+  #intrusion-overlay {
+    padding: 20px;
+  }
+
+  .terminal-text {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .mulberry-btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+
+  /* News Section Mobile Adjustments */
+  .news-header-section {
+    padding: 60px 20px 30px;
+  }
+
+  .news-container {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-tagline {
+    font-size: 1.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.5rem;
+  }
+
+  .disturbing-text {
+    font-size: 1.8rem;
+  }
+
+  nav ul {
+    gap: 10px;
+  }
+
+  nav a {
+    font-size: 0.6rem;
+  }
+}
