@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM FAILURE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Manrope:wght@200;300;400;500&family=Playfair+Display:ital@0;1&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+
+        /* Noise background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 0, 0, 0.03) 2px,
+                    rgba(255, 0, 0, 0.03) 4px),
+                repeating-linear-gradient(90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 255, 0.03) 2px,
+                    rgba(0, 255, 255, 0.03) 4px);
+            opacity: 0.3;
+            z-index: 1;
+            pointer-events: none;
+            animation: noise 0.2s infinite;
+        }
+
+        /* Scanlines */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg,
+                    rgba(0, 0, 0, 0.15),
+                    rgba(0, 0, 0, 0.15) 1px,
+                    transparent 1px,
+                    transparent 2px);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        @keyframes noise {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: translate(0, 0);
+            }
+
+            10% {
+                opacity: 0.4;
+                transform: translate(-2px, 1px);
+            }
+
+            20% {
+                opacity: 0.25;
+                transform: translate(1px, -1px);
+            }
+
+            30% {
+                opacity: 0.35;
+                transform: translate(0, 0);
+            }
+
+            40% {
+                opacity: 0.3;
+                transform: translate(1px, 0);
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: translate(-1px, 1px);
+            }
+
+            60% {
+                opacity: 0.25;
+                transform: translate(0, -1px);
+            }
+
+            70% {
+                opacity: 0.35;
+                transform: translate(0, 0);
+            }
+
+            80% {
+                opacity: 0.3;
+                transform: translate(1px, 1px);
+            }
+
+            90% {
+                opacity: 0.4;
+                transform: translate(-1px, 0);
+            }
+        }
+
+        .glitch-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10;
+            color: red;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .glitch-title {
+            font-size: 5rem;
+            text-shadow:
+                0 0 20px red,
+                2px 0 0 rgba(255, 0, 0, 0.7),
+                -2px 0 0 rgba(0, 255, 255, 0.7);
+            margin-bottom: 20px;
+            animation: glitch-text-anim 0.3s infinite;
+            position: relative;
+            z-index: 20;
+        }
+
+        .glitch-instruction {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow:
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(255, 255, 255, 0.5);
+            position: relative;
+            z-index: 20;
+        }
+
+        .glitch-hint {
+            font-size: 1.5rem;
+            color: #aaa;
+            margin-top: 20px;
+            text-shadow: 0 0 5px rgba(170, 170, 170, 0.5);
+            position: relative;
+            z-index: 20;
+        }
+
+        @keyframes glitch-text-anim {
+            0% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-2px, 2px);
+            }
+
+            40% {
+                transform: translate(-2px, -2px);
+            }
+
+            60% {
+                transform: translate(2px, 2px);
+            }
+
+            80% {
+                transform: translate(2px, -2px);
+            }
+
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        .key-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 15rem;
+            color: red;
+            opacity: 0.8;
+            z-index: 10001;
+            pointer-events: none;
+            text-shadow: 0 0 20px black;
+            font-weight: bold;
+            font-family: sans-serif;
+            animation: fadeOut 0.2s forwards;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 0.8;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* Finale overlay */
+        #intrusion-overlay {
+            z-index: 200000;
+            background: #000;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .terminal-text {
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            line-height: 2;
+            white-space: pre-wrap;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .mulberry-btn {
+            border: 1px solid #fff;
+            background: transparent;
+            color: #fff;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            margin-top: 40px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: 0.3s;
+        }
+
+        .mulberry-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="glitch-page">
+        <div class="glitch-title">SYSTEM FAILURE</div>
+        <div class="glitch-instruction">TYPE "WAKE" TO REBOOT</div>
+        <div class="glitch-hint">KEYBOARD INPUT REQUIRED</div>
+    </div>
+
+    <script>
+        // Flash effect loop
+        const flashLoop = () => {
+            if (Math.random() > 0.8) {
+                const el = document.createElement('div');
+                el.style.cssText = `
+                    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                    background: ${Math.random() > 0.5 ? 'white' : 'red'};
+                    opacity: ${Math.random() * 0.3};
+                    z-index: 999; pointer-events: none; mix-blend-mode: exclusion;
+                `;
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 100);
+            }
+            setTimeout(flashLoop, 150);
+        };
+        flashLoop();
+
+        // WAKE input detection
+        let keyBuffer = "";
+
+        document.addEventListener('keydown', (e) => {
+            let char = '';
+            if (e.code === 'KeyW') char = 'W';
+            else if (e.code === 'KeyA') char = 'A';
+            else if (e.code === 'KeyK') char = 'K';
+            else if (e.code === 'KeyE') char = 'E';
+
+            if (char) {
+                keyBuffer += char;
+                if (keyBuffer.length > 10) keyBuffer = keyBuffer.slice(-5);
+                console.log("Buffer:", keyBuffer);
+
+                // Visual Feedback
+                const fb = document.createElement('div');
+                fb.className = 'key-feedback';
+                fb.innerText = char;
+                document.body.appendChild(fb);
+                setTimeout(() => fb.remove(), 200);
+
+                // Check for WAKE sequence
+                if (keyBuffer.endsWith("WAKE")) {
+                    // Update state to phase 2
+                    const STATE_KEY = 'bar_sanctuary_state';
+                    try {
+                        const s = JSON.parse(localStorage.getItem(STATE_KEY)) || {};
+                        s.phase = 2;
+                        localStorage.setItem(STATE_KEY, JSON.stringify(s));
+                    } catch (e) { }
+
+                    // Show finale
+                    document.querySelector('.glitch-page').remove();
+
+                    let overlay = document.getElementById('intrusion-overlay');
+                    if (!overlay) {
+                        overlay = document.createElement('div');
+                        overlay.id = 'intrusion-overlay';
+                        document.body.appendChild(overlay);
+                    }
+                    overlay.innerHTML = `<div class="terminal-text"></div>`;
+
+                    const finalMsg = "あなたは夢から覚めました。\nもう遊びに行く時間です。\n\n現実は、ここにあります\nあなたの目の前に広がっています。\n\n...それとも、まだ思い出せませんか？";
+
+                    const textEl = overlay.querySelector('.terminal-text');
+                    typeWriter(textEl, finalMsg, () => {
+                        setTimeout(() => {
+                            const btn = document.createElement('button');
+                            btn.className = 'mulberry-btn';
+                            btn.innerText = "今日もあのBARに飲みに行く";
+                            btn.onclick = () => {
+                                window.location.href = "https://cluster.mu/w/1c331560-bc78-44ad-9e37-98428ba614a4";
+                            };
+                            overlay.appendChild(btn);
+                        }, 1000);
+                    });
+
+                    keyBuffer = "";
+                }
+            }
+        });
+
+        function typeWriter(el, text, cb) {
+            let i = 0;
+            el.innerText = "";
+            const speed = 40;
+
+            function step() {
+                if (i < text.length) {
+                    el.innerText += text.charAt(i);
+                    i++;
+                    setTimeout(step, speed);
+                } else if (cb) {
+                    cb();
+                }
+            }
+            step();
+        }
+    </script>
+</body>
+
+</html>
