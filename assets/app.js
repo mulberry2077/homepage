@@ -423,14 +423,14 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.innerHTML = `<div class="disturbing-text" data-text="${msg}">${msg}</div>`;
             document.body.appendChild(overlay);
 
-            // Recruit page: 0.5s duration
-            // Home page: 0.5s duration (was 1s in my mental model but code said 500ms which is 0.5s)
+            // Recruit page: 1.0s duration
+            // Home page: 1.0s duration (was 1s in my mental model but code said 500ms which is 0.5s)
             // Code actually said: Remove after 1 seconds (comment) but code was 500ms.
-            // User request for Recruit: "0.5秒間だけ" (only for 0.5 seconds).
+            // User request for Recruit: "1.0秒間だけ" (only for 1.0 seconds).
             // Existing code had 500ms. So 500ms is correct for both.
             setTimeout(() => {
                 overlay.remove();
-            }, 500);
+            }, 1000);
         }
     });
 
